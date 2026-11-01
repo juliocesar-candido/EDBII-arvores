@@ -20,7 +20,6 @@ class _Comum:
         ok, msg = t.validar()
         self.assertTrue(ok, msg)
 
-    # ---------- árvore vazia e com um elemento ----------
     def test_arvore_vazia(self):
         t = self.novo()
         self.assertEqual(len(t), 0)
@@ -52,7 +51,7 @@ class _Comum:
 
     def test_insercao_crescente(self):
         t = self._insere_validando(list(range(1, 501)))
-        self.assertLessEqual(t.height(), 2 * 9 + 2)  # muito menor que 500 (BST degenerada)
+        self.assertLessEqual(t.height(), 2 * 9 + 2) 
 
     def test_insercao_decrescente(self):
         t = self._insere_validando(list(range(500, 0, -1)))
@@ -62,7 +61,6 @@ class _Comum:
         rnd = random.Random(7)
         self._insere_validando(rnd.sample(range(10000), 500))
 
-    # ---------- repetidos ----------
     def test_valor_repetido_rejeitado(self):
         t = self.novo([10, 5, 15])
         antes = t.inorder()
@@ -71,7 +69,6 @@ class _Comum:
         self.assertEqual(t.inorder(), antes)
         self.valida(t)
 
-    # ---------- busca ----------
     def test_busca_existentes_e_inexistentes(self):
         t = self.novo([50, 30, 70, 20, 40, 60, 80])
         for k in (50, 30, 70, 20, 40, 60, 80):
@@ -79,7 +76,6 @@ class _Comum:
         for k in (0, 25, 55, 100, -3):
             self.assertFalse(t.search(k))
 
-    # ---------- remoção com diferentes configurações de filhos ----------
     def test_remocao_folha(self):
         t = self.novo([50, 30, 70, 20, 40, 60, 80])
         self.assertTrue(t.delete(20))
@@ -124,7 +120,6 @@ class _Comum:
         self.assertEqual(len(t), 0)
         self.assertEqual(t.height(), 0)
 
-    # ---------- misto: propriedades após inserções e remoções ----------
     def test_operacoes_mistas_aleatorias(self):
         rnd = random.Random(2024)
         t, ref = self.Tree(), set()
@@ -179,7 +174,7 @@ class TestRubroNegra(_Comum, unittest.TestCase):
         self.assertEqual(t.root.color, "B")
 
     def test_recoloracao_tio_vermelho(self):
-        t = self.novo([10, 5, 15, 1])  # 1 entra com pai e tio vermelhos
+        t = self.novo([10, 5, 15, 1])  
         self.assertEqual(t.rotacoes, 0)
         self.assertEqual(t.root.color, "B")
         self.assertEqual(t.root.left.color, "B")

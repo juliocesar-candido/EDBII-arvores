@@ -14,7 +14,6 @@ def sequencias(n):
     cres = list(range(1, n + 1))
     decr = cres[::-1]
     alea = rnd.sample(range(1, 10 * n + 1), n)
-    # cenário misto: insere todos, depois remove metade (sempre com o mesmo sorteio)
     remover = rnd.sample(alea, n // 2)
     return [
         ("crescente", cres, []),

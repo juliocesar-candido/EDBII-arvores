@@ -14,7 +14,7 @@ class AVLTree:
     def __init__(self):
         self.root = None
         self._size = 0
-        self._ok = False  # sinaliza sucesso da última inserção/remoção
+        self._ok = False 
         self.reset_stats()
 
     def reset_stats(self):
@@ -35,7 +35,7 @@ class AVLTree:
             "rot_esq": self.rot_esq,
             "rot_dir": self.rot_dir,
             "rot_duplas": self.duplas,
-            "recoloracoes": 0,  # AVL não usa cores
+            "recoloracoes": 0, 
         }
 
     def __len__(self):
@@ -55,7 +55,6 @@ class AVLTree:
         return self._h(self.root)
 
     def _rot_right(self, y):
-        """Rotação simples à direita (caso LL)."""
         x = y.left
         y.left = x.right
         x.right = y
@@ -65,7 +64,6 @@ class AVLTree:
         return x
 
     def _rot_left(self, x):
-        """Rotação simples à esquerda (caso RR)."""
         y = x.right
         x.right = y.left
         y.left = x
@@ -77,13 +75,13 @@ class AVLTree:
     def _rebalance(self, n):
         self._update(n)
         bal = self._balance(n)
-        if bal > 1:                                  # pesado à esquerda
-            if self._balance(n.left) < 0:            # LR: dupla
+        if bal > 1:                                
+            if self._balance(n.left) < 0:          
                 n.left = self._rot_left(n.left)
                 self.duplas += 1
             return self._rot_right(n)
-        if bal < -1:                                 # pesado à direita
-            if self._balance(n.right) > 0:           # RL: dupla
+        if bal < -1:                                 
+            if self._balance(n.right) > 0:          
                 n.right = self._rot_right(n.right)
                 self.duplas += 1
             return self._rot_left(n)
@@ -128,7 +126,7 @@ class AVLTree:
 
     def _delete(self, n, key):
         if n is None:
-            return None  # inexistente
+            return None 
         if key < n.key:
             n.left = self._delete(n.left, key)
         elif key > n.key:
@@ -139,7 +137,6 @@ class AVLTree:
                 return n.right
             if n.right is None:
                 return n.left
-            # dois filhos: sucessor em ordem
             s = n.right
             while s.left:
                 s = s.left
@@ -167,8 +164,6 @@ class AVLTree:
 
     
     def render(self, colored=False):
-        """Desenho horizontal (raiz à esquerda; filhos à direita acima, esquerda abaixo).
-        Cada nó mostra: chave [fator de balanceamento]."""
         if not self.root:
             return "(árvore vazia)"
         lines = []
@@ -187,7 +182,6 @@ class AVLTree:
         print(self.render(colored))
 
     def validar(self):
-        """Retorna (ok, mensagem). Verifica BST, alturas armazenadas e |fb| <= 1."""
         def rec(n, lo, hi):
             if n is None:
                 return 0, None

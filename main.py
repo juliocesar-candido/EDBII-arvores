@@ -1,12 +1,3 @@
-"""
-Amazon Engineering Challenge - Árvores Balanceadas (AVL e Rubro-Negra)
-IMD0039 - Estruturas de Dados Básicas II
-Autor: <SEU NOME> - <SUA MATRÍCULA>
-
-Uso: python main.py
-O usuário escolhe, na execução, qual árvore utilizar (AVL ou Rubro-Negra).
-Os elementos são identificadores numéricos de encomendas (inteiros).
-"""
 import random
 import sys
 

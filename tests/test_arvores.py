@@ -40,7 +40,6 @@ class _Comum:
         self.assertEqual(t.inorder(), [])
         self.valida(t)
 
-    # ---------- inserção em diferentes ordens ----------
     def _insere_validando(self, chaves):
         t = self.Tree()
         for k in chaves:
@@ -84,7 +83,7 @@ class _Comum:
         self.valida(t)
 
     def test_remocao_um_filho(self):
-        t = self.novo([50, 30, 70, 20, 60, 80, 10])  # 20 tem só o filho 10
+        t = self.novo([50, 30, 70, 20, 60, 80, 10]) 
         self.assertTrue(t.delete(20))
         self.assertEqual(t.inorder(), [10, 30, 50, 60, 70, 80])
         self.valida(t)
@@ -174,7 +173,7 @@ class TestRubroNegra(_Comum, unittest.TestCase):
         self.assertEqual(t.root.color, "B")
 
     def test_recoloracao_tio_vermelho(self):
-        t = self.novo([10, 5, 15, 1])  
+        t = self.novo([10, 5, 15, 1])  # 1 entra com pai e tio vermelhos
         self.assertEqual(t.rotacoes, 0)
         self.assertEqual(t.root.color, "B")
         self.assertEqual(t.root.left.color, "B")

@@ -1,27 +1,3 @@
-"""
-Árvore Rubro-Negra (implementação própria, baseada no algoritmo do CLRS
-com nó sentinela NIL).
-
-Propriedades:
-  1. Todo nó é vermelho ou preto.
-  2. A raiz é preta.
-  3. As folhas (NIL) são pretas.
-  4. Filho de nó vermelho é preto (sem dois vermelhos seguidos).
-  5. Todo caminho de um nó até suas folhas NIL tem o mesmo nº de nós pretos.
-
-Decisões de projeto (documentadas conforme o enunciado):
-  - Inserir chave repetida: REJEITADA, árvore inalterada, retorna False.
-  - Remover chave inexistente: árvore inalterada, retorna False.
-  - Buscar chave inexistente: retorna False (sem exceção).
-  - Remoção de nó com 2 filhos: substituído pelo SUCESSOR em ordem.
-  - Altura: árvore vazia = 0; árvore com um nó = 1.
-
-Contadores (para a análise comparativa):
-  - rot_esq / rot_dir: rotações simples executadas.
-  - recoloracoes: nº de vezes que um nó REALMENTE mudou de cor
-    (a cor inicial vermelha de um nó recém-inserido não conta).
-"""
-
 RED = "R"
 BLACK = "B"
 
@@ -47,7 +23,6 @@ class RedBlackTree:
         self._size = 0
         self.reset_stats()
 
-    # ------------------------------------------------------------ estatísticas
     def reset_stats(self):
         self.rot_esq = 0
         self.rot_dir = 0
@@ -72,9 +47,7 @@ class RedBlackTree:
     def __len__(self):
         return self._size
 
-    # ------------------------------------------------------------- utilidades
     def _set_color(self, node, color):
-        """Muda a cor contando apenas mudanças reais (nunca mexe no NIL)."""
         if node is not self.NIL and node.color != color:
             node.color = color
             self.recoloracoes += 1
@@ -89,7 +62,6 @@ class RedBlackTree:
             return 0 if n is self.NIL else 1 + max(rec(n.left), rec(n.right))
         return rec(self.root)
 
-    # --------------------------------------------------------------- rotações
     def _rot_left(self, x):
         y = x.right
         x.right = y.left
@@ -122,13 +94,12 @@ class RedBlackTree:
         y.parent = x
         self.rot_dir += 1
 
-    # ---------------------------------------------------------------- inserção
     def insert(self, key):
         parent, cur = self.NIL, self.root
         while cur is not self.NIL:
             parent = cur
             if key == cur.key:
-                return False  # duplicada: rejeita
+                return False 
             cur = cur.left if key < cur.key else cur.right
 
         z = RBNode(key, RED)
@@ -149,16 +120,16 @@ class RedBlackTree:
             gp = z.parent.parent
             if z.parent is gp.left:
                 uncle = gp.right
-                if uncle.color == RED:              # caso 1: tio vermelho -> recolore
+                if uncle.color == RED:              
                     self._set_color(z.parent, BLACK)
                     self._set_color(uncle, BLACK)
                     self._set_color(gp, RED)
                     z = gp
                 else:
-                    if z is z.parent.right:         # caso 2: triângulo -> rotação
+                    if z is z.parent.right:         
                         z = z.parent
                         self._rot_left(z)
-                    self._set_color(z.parent, BLACK)  # caso 3: linha -> rotação + cores
+                    self._set_color(z.parent, BLACK)  
                     self._set_color(z.parent.parent, RED)
                     self._rot_right(z.parent.parent)
             else:
@@ -177,7 +148,6 @@ class RedBlackTree:
                     self._rot_left(z.parent.parent)
         self._set_color(self.root, BLACK)
 
-    # ------------------------------------------------------------------ busca
     def _find(self, key):
         n = self.root
         while n is not self.NIL:
@@ -189,7 +159,6 @@ class RedBlackTree:
     def search(self, key):
         return self._find(key) is not self.NIL
 
-    # ----------------------------------------------------------------- remoção
     def _transplant(self, u, v):
         if u.parent is self.NIL:
             self.root = v
@@ -197,7 +166,7 @@ class RedBlackTree:
             u.parent.left = v
         else:
             u.parent.right = v
-        v.parent = u.parent  # funciona mesmo se v for NIL
+        v.parent = u.parent  
 
     def delete(self, key):
         z = self._find(key)
@@ -235,21 +204,21 @@ class RedBlackTree:
         while x is not self.root and x.color == BLACK:
             if x is x.parent.left:
                 w = x.parent.right
-                if w.color == RED:                          # caso 1: irmão vermelho
+                if w.color == RED:                          
                     self._set_color(w, BLACK)
                     self._set_color(x.parent, RED)
                     self._rot_left(x.parent)
                     w = x.parent.right
-                if w.left.color == BLACK and w.right.color == BLACK:   # caso 2
+                if w.left.color == BLACK and w.right.color == BLACK:   
                     self._set_color(w, RED)
                     x = x.parent
                 else:
-                    if w.right.color == BLACK:              # caso 3
+                    if w.right.color == BLACK:              
                         self._set_color(w.left, BLACK)
                         self._set_color(w, RED)
                         self._rot_right(w)
                         w = x.parent.right
-                    self._set_color(w, x.parent.color)      # caso 4
+                    self._set_color(w, x.parent.color)     
                     self._set_color(x.parent, BLACK)
                     self._set_color(w.right, BLACK)
                     self._rot_left(x.parent)
@@ -277,7 +246,7 @@ class RedBlackTree:
                     x = self.root
         self._set_color(x, BLACK)
 
-    # ----------------------------------------------------------------- percurso
+    
     def inorder(self):
         res, stack, n = [], [], self.root
         while stack or n is not self.NIL:
@@ -289,10 +258,9 @@ class RedBlackTree:
             n = n.right
         return res
 
-    # ------------------------------------------------------------ visualização
+    
     def render(self, colored=False):
-        """Desenho horizontal. Cada nó mostra: chave (R) ou (B).
-        Com colored=True usa cores ANSI (vermelho/branco) além da letra."""
+        
         if self.root is self.NIL:
             return "(árvore vazia)"
         lines = []
@@ -316,9 +284,7 @@ class RedBlackTree:
     def print_tree(self, colored=False):
         print(self.render(colored))
 
-    # ------------------------------------------------------------- validação
     def validar(self):
-        """Retorna (ok, mensagem). Verifica BST e as propriedades 2, 4 e 5."""
         if self.root.color != BLACK:
             return False, "raiz não é preta"
         if self.NIL.color != BLACK:
